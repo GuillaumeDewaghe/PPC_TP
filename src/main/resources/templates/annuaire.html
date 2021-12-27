@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Annuaire</title>
+    <link rel="stylesheet" href="/css/annuaire.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="divTable">
+    <div class="headRow">
+        <div class="headCell">Id</div>
+        <div class="headCell">Nom</div>
+        <div class="headCell">Prenom</div>
+        <div class="headCell">Telephone</div>
+        <div class="headCell">Ville</div>
+        <div class="headCell">Actions</div>
+    </div>
+    <th:block th:each="entry: ${entries}">
+        <div class="divRow">
+            <div class="divCell" data-title="Id">
+                <span th:text="${entry.getId()}"> Id </span>
+            </div>
+            <div class="divCell" data-title="Name">
+                <span th:text="${entry.getName()}"> Name </span>
+            </div>
+            <div class="divCell" data-title="Surname">
+                <span th:text="${entry.getSurname()}"> Surname </span>
+            </div>
+            <div class="divCell" data-title="Phone">
+                <span th:text="${entry.getPhone()}"> Phone </span>
+            </div>
+            <div class="divCell" data-title="City">
+                <span th:text="${entry.getCity()}"> City </span>
+            </div>
+            <div class="divCell" data-title="Action">
+                <a th:href="@{|/annuaire/supprimer/${entry.getId()}|}"> Supprimer </a>
+                <a th:href="@{|/modifier/${entry.getId()}|}"> Modifier </a>
+            </div>
+        </div>
+    </th:block>
+</div>
+</body>
+</html>

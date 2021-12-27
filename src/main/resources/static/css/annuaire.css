@@ -1,0 +1,40 @@
+.divTable {
+display: table;
+width: auto;
+background-color: #929292;
+border: 1px solid #666666;
+border-spacing: 5px;
+margin: 0 auto;
+width: auto;
+font-size: 20px;
+}
+
+.headRow {
+display: table-row;
+width: auto;
+clear: both;
+}
+
+.divRow {
+display: table-row;
+width: auto;
+clear: both;
+}
+
+.divCell {
+float: left;
+display: table-column;
+width: 200px;
+background-color: #eaeaea;
+}
+
+.headCell {
+float: left;
+display: table-column;
+width: 200px;
+background-color: #ff2600;
+}
+
+.leftBlock {
+float: left;
+}

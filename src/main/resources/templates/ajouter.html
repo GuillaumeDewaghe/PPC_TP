@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ajouter</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<fieldset>
+    <form action="/annuaire/ajouter" method="post">
+        <label for="name">Nom :
+            <input type="text" id="name" name="name" size = "30"/>
+        </label><br>
+        <label for="name">Prenom :
+            <input type="text" id="surname" name="surname" size = "30"/>
+        </label><br>
+        <label for="name">Telephone :
+            <input type="text" id="phone" name="phone" size = "30"/>
+        </label><br>
+        <label for="name">Ville :
+            <input type="text" id="city" name="city" size = "30"/>
+        </label><br>
+        <input type="submit" value="Submit" />
+    </form>
+</fieldset>
+</body>
