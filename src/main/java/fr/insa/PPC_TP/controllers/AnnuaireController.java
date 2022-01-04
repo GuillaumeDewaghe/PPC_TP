@@ -4,14 +4,16 @@ import fr.insa.PPC_TP.classes.Person;
 import fr.insa.PPC_TP.interfaces.PersonRepository;
 import fr.insa.PPC_TP.services.AnnuaireService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
+import java.util.Collection;
 import java.util.Optional;
 
-@Controller
+//@Controller
+@RestController
 public class AnnuaireController
 {
     @Autowired
@@ -19,6 +21,8 @@ public class AnnuaireController
 
     @Autowired
     PersonRepository personRepository;
+
+    /*--------------------------------------------------------------------------- MODEL ---------------------------------------------------------------------------*/
 
     /*----- RECHERCHE -----*/
 
@@ -117,5 +121,83 @@ public class AnnuaireController
             personRepository.save(person.get() );
         }
         return "redirect:/annuaire/recherche";
+    }
+
+    /*--------------------------------------------------------------------------- REST ---------------------------------------------------------------------------*/
+
+    @GetMapping("/entree")
+    public ResponseEntity<Collection<Person> > recherche()
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(annuaireService.getAll() );
+    }
+
+    @GetMapping("/entree/{id}")
+    public ResponseEntity<Person> rechercheParId(@PathVariable Long id)
+    {
+        var personneID = annuaireService.getFromId(id);
+        if(personneID.isPresent() )
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(personneID.get() );
+        }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping("/entree")
+    public ResponseEntity<Collection<Person> > ajouter(@RequestParam(name = "name") String name,
+                                                      @RequestParam(name = "surname") String surname,
+                                                      @RequestParam(name = "phone") String phone,
+                                                      @RequestParam(name = "city") String city)
+    {
+        var personnes = annuaireService;
+        if(personnes.getFromName(name).isEmpty() )
+        {
+            this.personRepository.save(new Person(name, surname, phone, city) );
+            return ResponseEntity.status(HttpStatus.CREATED).body(personnes.getAll() );
+        }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+    }
+
+    @DeleteMapping("/entree/{id}")
+    public ResponseEntity<Collection<Person> > supprimer(@PathVariable Long id)
+    {
+        var personnes = annuaireService;
+        if(personnes.getFromId(id).isPresent() )
+        {
+            personnes.deleteFromId(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/entree")
+    public ResponseEntity<Person> modifier(@RequestParam(name = "id") Long id,
+                                           @RequestParam(name = "name") String name,
+                                           @RequestParam(name = "surname") String surname,
+                                           @RequestParam(name = "phone") String phone,
+                                           @RequestParam(name = "city") String city)
+    {
+        Optional<Person> person = this.annuaireService.getFromId(id);
+        if(person.isPresent() )
+        {
+            person.get().setName(name);
+            person.get().setSurname(surname);
+            person.get().setPhone(phone);
+            person.get().setCity(city);
+            personRepository.save(person.get() );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }
