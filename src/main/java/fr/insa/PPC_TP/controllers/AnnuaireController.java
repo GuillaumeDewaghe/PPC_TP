@@ -6,6 +6,7 @@ import fr.insa.PPC_TP.services.AnnuaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -199,5 +200,20 @@ public class AnnuaireController
         {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    /*--------------------------------------------------------------------------- KAFKA ---------------------------------------------------------------------------*/
+
+    /**
+     * Cette méthode est appelée à chaque fois qu'un nouveau message est ajouté dans la file
+     * On estime que les attributs sont séparés par ";"
+     * @param s File provenant de Kafka
+     */
+    @KafkaListener(id = "myId", topics = "quickstart-events")
+    public void ajoutPersonneKafka(String s)
+    {
+        String[] sTemp = s.split(";");
+        Person p = new Person(sTemp[0], sTemp[1], sTemp[2], sTemp[3]);
+        annuaireService.addPerson(p);
     }
 }

@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+    web:
+        image : openjdk:11
+        volumes:
+        - ./target:/jar:ro
+        command: java -jar jar/PPC_TP-0.0.1-SNAPSHOT.jar
+        build: .
+        ports:
+        - "8090:8090"
+        environment:
+            spring.datasource.url: "jdbc:hsqldb:hsql://bdd:9001/ppc"
+        depends_on: 
+        - bdd
+    bdd:
+        image: datagrip/hsqldb:2.3.4
+        environment: 
+            HSQLDB_DATABASE_ALIAS: ppc          
+        volumes: 
+        - ./database:/opt/database:rw
+        restart: always
+volumes:
+    database: 
+    target:
